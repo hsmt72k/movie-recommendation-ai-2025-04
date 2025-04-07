@@ -1,5 +1,6 @@
 import { Host_Grotesk, Noto_Sans_JP } from 'next/font/google';
 
+import Header from '@/components/header';
 import { cn } from '@/lib/utils';
 
 import type { Metadata } from 'next';
@@ -36,7 +37,8 @@ export default function RootLayout({
           'bg-gradient-to-r from-purple-700/60 to-blue-500/90 max-w-7xl mx-auto',
         )}
       >
-        <main className="p-8 bg-slate-50/50 shadow-2xl drop-shadow-2xl">
+        <main className="p-8 pt-4 bg-slate-50/50 shadow-2xl drop-shadow-2xl">
+          <Header />
           {children}
         </main>
       </body>
