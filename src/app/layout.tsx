@@ -1,6 +1,9 @@
 import { Host_Grotesk, Noto_Sans_JP } from 'next/font/google';
 
+import { cn } from '@/lib/utils';
+
 import type { Metadata } from 'next';
+
 import './globals.css';
 
 const notoSansJp = Noto_Sans_JP({
@@ -28,9 +31,14 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${notoSansJp.variable} ${host_Grotesk.className} antialiased font-noto-sans-jp`}
+        className={cn(
+          `${notoSansJp.variable} ${host_Grotesk.className} antialiased font-noto-sans-jp`,
+          'bg-gradient-to-r from-purple-700/60 to-blue-500/90 max-w-7xl mx-auto',
+        )}
       >
-        {children}
+        <main className="p-8 bg-slate-50/50 shadow-2xl drop-shadow-2xl">
+          {children}
+        </main>
       </body>
     </html>
   );
