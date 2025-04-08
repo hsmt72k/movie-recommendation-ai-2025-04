@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
+import ImageWithFallback from '@/components/image-with-fallback';
 import { cn } from '@/lib/utils';
 import { Movie, SimilarMovie } from '@/types';
 
@@ -22,16 +22,14 @@ function MoviePoster({
       className="flex flex-col items-center justify-center"
     >
       <div>
-        <Image
-          width={300}
-          height={450}
+        <ImageWithFallback
+          className={cn(
+            'object-cover rounded-lg shadow-lg',
+            isSimilarity && '-ml-28 min-w-32 max-w-32',
+            !isSimilarity && 'min-w-64 max-w-64 h-96',
+          )}
           src={movie.Poster}
           alt={movie.Title}
-          className={cn(
-            'object-contain rounded-lg shadow-lg',
-            isSimilarity && '-ml-28 min-w-32 max-w-32',
-            !isSimilarity && 'min-w-64 max-w-64',
-          )}
         />
       </div>
       <div className="relative">
