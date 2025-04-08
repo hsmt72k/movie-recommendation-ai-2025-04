@@ -34,7 +34,8 @@ function SearchInput() {
       </Link>
       <input
         type="text"
-        className="flex-1 p-5 outline-none placeholder:text-gray-400/80"
+        className="flex-1 p-5 outline-none placeholder:text-gray-400/80 w-full truncate"
+        style={{ textOverflow: 'ellipsis' }}
         name="searchTerm"
         placeholder="あなたはどんな種類の映画が好きですか？ 映画タイトルやジャンルなどで検索できます..."
       />
