@@ -30,6 +30,7 @@ function MoviePoster({
           )}
           src={movie.Poster}
           alt={movie.Title}
+          isSimilarity={isSimilarity}
         />
       </div>
       <div className="relative">

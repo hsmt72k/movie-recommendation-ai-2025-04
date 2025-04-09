@@ -2,26 +2,43 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 import MoviePoster from '@/components/movie-poster';
-import { mockMovies } from '@/data/movie-mock-data';
+import db from '@/lib/db';
+
+import type { Movie, SimilarMovie } from '@/types';
+
+const SIMILAR_MOVIES_LIMIT = 5;
 
 async function MovieIdPage({
-  params: { id },
+  params,
 }: {
   params: {
     id: string;
   };
 }) {
-  // モックデータから対象の映画を検索
-  const movie = mockMovies.find((movie) => movie._id === id);
+  const movies = db.collection('movies');
 
-  if (!movie) {
+  const { id } = await params;
+  const search = await movies.find(
+    { $and: [{ _id: id }] },
+    { projection: { $vector: 1 } },
+  );
+
+  if (!(await search.hasNext())) {
     return notFound();
   }
 
-  // 類似映画を取得
-  const similarMovies = mockMovies
-    .filter((m) => m._id !== movie._id) // 自分自身を除外
-    .slice(0, 5); // 最大5つの類似映画を取得
+  const movie = (await search.next()) as Movie;
+  console.log('movie.$vector', movie.$vector);
+  const similarMovies = (await movies
+    .find(
+      {},
+      {
+        vector: movie.$vector,
+        limit: SIMILAR_MOVIES_LIMIT + 1,
+        includeSimilarity: true,
+      },
+    )
+    .toArray()) as SimilarMovie[];
 
   // 映画情報の項目を定義
   const movieDetails = [
@@ -74,7 +91,10 @@ async function MovieIdPage({
             <MoviePoster
               key={movie._id}
               index={i + 1}
-              similarityRating={Number(movie.$similarity.toFixed(2)) * 100}
+              similarityRating={
+                movie.$similarity &&
+                Number(movie.$similarity.toFixed(2)) * 100
+              }
               movie={movie}
               isSimilarity
             />

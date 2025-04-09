@@ -1,5 +1,7 @@
 import MoviePoster from '@/components/movie-poster';
-import { mockMovies } from '@/data/movie-mock-data';
+import db from '@/lib/db';
+
+import type { Movie } from '@/types';
 
 async function SearchTermPage({
   params: { term },
@@ -10,11 +12,17 @@ async function SearchTermPage({
 }) {
   const decodedTerm = decodeURIComponent(term);
 
-  const similarMovies = mockMovies.filter(
-    (movie) =>
-      movie.Title.toLowerCase().includes(decodedTerm.toLowerCase()) ||
-      movie.Genre.toLowerCase().includes(decodedTerm.toLowerCase()),
-  );
+  const movies = db.collection('movies');
+
+  const similarMovies = (await movies
+    .find(
+      {},
+      {
+        vectorize: term,
+        limit: 10,
+      },
+    )
+    .toArray()) as Movie[];
 
   return (
     <div className="flex flex-col items-center justify-center p-20 pt-10">

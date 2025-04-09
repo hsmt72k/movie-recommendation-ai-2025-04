@@ -6,7 +6,9 @@ import type { Movie } from '@/types';
 export default async function Home() {
   const movies = db.collection('movies');
 
-  const allMovies = (await movies.find({}).toArray()) as Movie[];
+  const allMovies = (await movies
+    .find({}, { projection: { _id: 1, Title: 1, Genre: 1, Poster: 1 } })
+    .toArray()) as Movie[];
 
   return (
     <div className="flex items-center justify-center pb-24 pt-12">
